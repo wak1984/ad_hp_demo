@@ -71,7 +71,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\sdk\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>D:\agora_codes\ConsoleApplication1\WindowsFormsApp1\bin\Debug</OutDir>
+    <OutDir>$(SolutionDir)..\ConsoleApplication1\WindowsFormsApp1\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -82,7 +82,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\sdk\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>D:\agora_codes\ConsoleApplication1\WindowsFormsApp1\bin\Release</OutDir>
+    <OutDir>$(SolutionDir)..\ConsoleApplication1\WindowsFormsApp1\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
