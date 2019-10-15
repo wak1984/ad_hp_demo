@@ -818,11 +818,15 @@ bool CAgoraSDKObject::onCaptureVideoFrame(VideoFrame& videoFrame)
 
     static BYTE* capturenYUVbuf_ = NULL;
     static int lastCapturenSize = 0;
+    static std::mutex capturenYUVbufLock_;
     if (1/*videoFrame.width != videoFrame.yStride*/) {
+        std::lock_guard<std::mutex> lock(capturenYUVbufLock_);
         int size = videoFrame.width * videoFrame.height;
         int u_size = size / 4;
         size += size / 2;
-        if (size != lastCapturenSize) {
+        if (size > lastCapturenSize) {
+            if (capturenYUVbuf_)
+                delete[] capturenYUVbuf_;
             capturenYUVbuf_ = new BYTE[size];
             lastCapturenSize = size;
         }
@@ -863,11 +867,20 @@ bool CAgoraSDKObject::onRenderVideoFrame(unsigned int uid, VideoFrame& videoFram
 
     static BYTE* capturenYUVbuf2_ = NULL;
     static int lastCapturenSize2 = 0;
+    static std::mutex capturenYUVbufLock2_;
     if (1/*videoFrame.width != videoFrame.yStride*/) {
+        std::lock_guard<std::mutex> lock(capturenYUVbufLock2_);
         int size = videoFrame.width * videoFrame.height;
         int u_size = size / 4;
         size += size / 2;
-        if (size != lastCapturenSize2) {
+        /*{
+            char buf[200] = { 0 };
+            sprintf_s(buf, "onRenderVideoFrame uid:%u tid:%d size:%d\r\n", uid, GetCurrentThreadId(), size);
+            OutputDebugStringA(buf);
+        }*/
+        if (size > lastCapturenSize2) {
+            if (capturenYUVbuf2_)
+                delete[] capturenYUVbuf2_;
             capturenYUVbuf2_ = new BYTE[size];
             lastCapturenSize2 = size;
         }

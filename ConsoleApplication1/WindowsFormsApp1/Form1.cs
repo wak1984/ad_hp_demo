@@ -65,16 +65,6 @@ namespace WindowsFormsApp1
             re_.OnFirstRemoteVideoDecoded = OnFirstRemoteVideoDecodedHandlerThread;
             re_.OnUserOffline = UserOfflineHandler;
             re_.OnUserJoined = UserJoinedHandler;
-
-            // local video frame raw data handler, the raw data format is YUV420
-            re_.onCaptureVideoFrameRaw = OnCaptureVideoFrameRawHandler;
-            // For remote video frame raw data handler, use onRenderVideoFrameRaw.
-            re_.onRenderVideoFrameRaw = OnRenderVideoFrameRawHandler;
-
-            // Init video frame buffer list for thread changing.
-            mutexVideoFrameRawHandlerParam_ = new Mutex();
-            usingVideoFrameRawHandlerParam_ = new List<VideoFrameRawHandlerParam>();
-            unUseVideoFrameRawHandlerParam_ = new List<VideoFrameRawHandlerParam>();
         }
 
         ~Form1()
@@ -99,6 +89,20 @@ namespace WindowsFormsApp1
             re_.SetupLocalVideo(h_wnd, 2, 0, new IntPtr());
 
             re_.SetParameter("rtc.channel_mode", 0);
+
+            if (checkBox2.Checked)
+            {
+                // local video frame raw data handler, the raw data format is YUV420
+                re_.onCaptureVideoFrameRaw = OnCaptureVideoFrameRawHandler;
+                // For remote video frame raw data handler, use onRenderVideoFrameRaw.
+                re_.onRenderVideoFrameRaw = OnRenderVideoFrameRawHandler;
+
+                // Init video frame buffer list for thread changing.
+                mutexVideoFrameRawHandlerParam_ = new Mutex();
+                usingVideoFrameRawHandlerParam_ = new List<VideoFrameRawHandlerParam>();
+                unUseVideoFrameRawHandlerParam_ = new List<VideoFrameRawHandlerParam>();
+            }
+
             re_.JoinChannel(channel_name, "", 0);
         }
 
@@ -300,6 +304,7 @@ namespace WindowsFormsApp1
                 sel_vfrp = unUseVideoFrameRawHandlerParam_[0];
                 unUseVideoFrameRawHandlerParam_.RemoveAt(0);
             }
+            mutexVideoFrameRawHandlerParam_.ReleaseMutex();
 
             if (sel_vfrp.width != width 
                 || sel_vfrp.height != height)
@@ -320,6 +325,7 @@ namespace WindowsFormsApp1
             ConvertYUV2RGB(sel_vfrp.bm, sel_vfrp.yBuffer,
             sel_vfrp.rgbFrame, width, height);
 
+            mutexVideoFrameRawHandlerParam_.WaitOne();
             usingVideoFrameRawHandlerParam_.Add(sel_vfrp);
             mutexVideoFrameRawHandlerParam_.ReleaseMutex();
 
@@ -357,7 +363,7 @@ namespace WindowsFormsApp1
                     if (sel_vfrp.userId == pair.Key)
                         targPicbox = pair.Value;
                 }
-                if (pictureBox3.Handle == targPicbox)
+                if (panel3.Handle == targPicbox)
                 {
                     pictureBox3.Image = sel_vfrp.bm;
                 }
@@ -397,6 +403,7 @@ namespace WindowsFormsApp1
                 sel_vfrp = unUseVideoFrameRawHandlerParam_[0];
                 unUseVideoFrameRawHandlerParam_.RemoveAt(0);
             }
+            mutexVideoFrameRawHandlerParam_.ReleaseMutex();
 
             if (sel_vfrp.width != width
                 || sel_vfrp.height != height)
@@ -419,6 +426,7 @@ namespace WindowsFormsApp1
             ConvertYUV2RGB(sel_vfrp.bm, sel_vfrp.yBuffer,
             sel_vfrp.rgbFrame, width, height);
 
+            mutexVideoFrameRawHandlerParam_.WaitOne();
             usingVideoFrameRawHandlerParam_.Add(sel_vfrp);
             mutexVideoFrameRawHandlerParam_.ReleaseMutex();
 
