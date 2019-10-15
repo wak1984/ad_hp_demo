@@ -903,10 +903,10 @@ extern "C"
 		return CAgoraSDKObject::getCAgoraSDKInstance()->setupRemoteVideo(view, renderMode, uid, priv);
 	}
 
-    int startScreenCapture(HWND windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName)
+    int startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName)
     {
         CHECKWHEATHERINITAGORASDKOBJECTINT();
-        return CAgoraSDKObject::getCAgoraSDKInstance()->startScreenCapture(windowId, captureFreq, rc_left, rc_top, rc_width, rc_height, bitrate, GameName);
+        return CAgoraSDKObject::getCAgoraSDKInstance()->startScreenCapture(captureFreq, rc_left, rc_top, rc_width, rc_height, bitrate, GameName);
     }
 
     int stopScreenCapture()

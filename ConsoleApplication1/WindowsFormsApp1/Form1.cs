@@ -208,16 +208,17 @@ namespace WindowsFormsApp1
             }
 
             re_.SetParameter("che.hardware_encoding", 1);
-            IntPtr desktop_wnd = GetDesktopWindow();
-            int desktop_width = Screen.PrimaryScreen.Bounds.Width;
-            int desktop_height = Screen.PrimaryScreen.Bounds.Height;
+
+            //IntPtr desktop_wnd = GetDesktopWindow();
+            //int desktop_width = Screen.PrimaryScreen.Bounds.Width;
+            //int desktop_height = Screen.PrimaryScreen.Bounds.Height;
             int ret = re_.MuteRemoteAudioStream(10000, true);
             richTextBox1.Text += String.Format("MuteRemoteAudioStream return: {0}\n", ret);
             ret = re_.MuteRemoteVideoStream(10000, true);
             richTextBox1.Text += String.Format("MuteRemoteVideoStream return: {0}\n", ret);
 
             // Game audio capture use this api temporarily.
-            re_.StartScreenCapture(desktop_wnd, 15, 0, 0, desktop_width, desktop_height, 1000, textBox2.Text);
+            re_.StartScreenCapture(30/*fps*/, 0, 0, 0, 0, 4000, textBox2.Text);
         }
         public void UserOfflineHandlerUI(uint uid)
         {

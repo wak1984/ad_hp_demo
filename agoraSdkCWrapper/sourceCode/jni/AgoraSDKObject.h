@@ -132,7 +132,7 @@ public:
   virtual int pushExternVideoFrame(int type, int format, void* buffer, int stride, int height, int cropLeft, int cropTop, int cropRight, int cropBottom, int rotation, long timestamp);
   virtual int setExternalVideoSource(bool enable, bool useTexture);
 
-  virtual int startScreenCapture(HWND windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName);
+  virtual int startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName);
   virtual int stopScreenCapture();
 
   virtual int startScreenCaptureEx(HWND windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate);

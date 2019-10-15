@@ -823,7 +823,7 @@ namespace agora_gaming_rtc
         public static extern int setExternalAudioSource(bool enabled, int sampleRate, int channels);
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]
-        public static extern int startScreenCapture(IntPtr windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, String gameName);
+        public static extern int startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, String gameName);
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]
         public static extern int stopScreenCapture();

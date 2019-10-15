@@ -1,1 +1,5 @@
 .vs
+/agoraSdkCWrapper/agoraSdkCWrapper/Release
+/agoraSdkCWrapper/agoraSdkCWrapper/Debug
+/agoraSdkCWrapper/agoraSdkCWrapper/agoraSdkCWrapper.vcxproj.user
+/ConsoleApplication1/WindowsFormsApp1/obj

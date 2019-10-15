@@ -1359,9 +1359,9 @@ namespace agora_gaming_rtc
             return setExternalAudioSource(enabled, sampleRate, channels);
         }
 
-        public int StartScreenCapture(IntPtr windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, String gameName)
+        public int StartScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, String gameName)
         {
-            return startScreenCapture(windowId, captureFreq, rc_left, rc_top, rc_width, rc_height, bitrate, gameName);
+            return startScreenCapture(captureFreq, rc_left, rc_top, rc_width, rc_height, bitrate, gameName);
         }
 
         public int StopScreenCapture()
