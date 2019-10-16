@@ -4,14 +4,15 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 using agora_gaming_rtc;
+using System.Threading;
 /* class IRtcEngine provides c# API for Unity 3D
- * app. Use IRtcEngine to access underlying Agora
- * sdk.
- * 
- * Agora sdk only supports single instance by now. So here
- * provides GetEngine() and Destroy() to create/delete the
- * only instance.
- */
+* app. Use IRtcEngine to access underlying Agora
+* sdk.
+* 
+* Agora sdk only supports single instance by now. So here
+* provides GetEngine() and Destroy() to create/delete the
+* only instance.
+*/
 
 namespace agora_gaming_rtc
 {
@@ -412,50 +413,73 @@ namespace agora_gaming_rtc
             if (instance != null && instance.OnNetworkQuality != null)
                 instance.OnNetworkQuality(uid, txQuality, rxQuality);
         }
+        [DllImport("Kernel32", EntryPoint = "GetCurrentThreadId", ExactSpelling = true)]
+        public static extern Int32 GetCurrentWin32ThreadId();
 
-        static byte[] bufArray = null;
-        static int lastBufArraySize = 0;
+
+        class RawVideoFrameBufMgr
+        {
+            class RawVideoFrameBuf
+            {
+                private byte[] buf_ = null;
+                private int bufSize_ = 0;
+
+                public byte[] GetBuf(int size)
+                {
+                    if (size > bufSize_)
+                    {
+                        buf_ = new byte[size];
+                        bufSize_ = size;
+                    }
+                    return buf_;
+                }
+
+            }
+
+            private Mutex mtx_ = new Mutex();
+            private Dictionary<int, RawVideoFrameBuf> mapThreadId2Buf_ = new Dictionary<int, RawVideoFrameBuf>();
+            public byte[] GetBuf(int size)
+            {
+                int tid = GetCurrentWin32ThreadId();
+                mtx_.WaitOne();
+                RawVideoFrameBuf spBuf;
+                if (!mapThreadId2Buf_.TryGetValue(tid, out spBuf))
+                {
+                    spBuf = new RawVideoFrameBuf();
+                    mapThreadId2Buf_[tid] = spBuf;
+                }
+                mtx_.ReleaseMutex();
+                return spBuf.GetBuf(size);
+            }
+        }
+
+        static RawVideoFrameBufMgr rawVideoFrameBufMgr_ = new RawVideoFrameBufMgr();
+
         private static void OnCaptureVideoFrameRawCallBack(int width, int height, IntPtr yBuffer, int rotation)
         {
             if (instance != null && instance.onCaptureVideoFrameRaw != null)
             {
-                if (!instanceReference.IsAlive)
+                int size = width * height * 3 / 2; // YUV420 data size
+                if (size > 0)
                 {
-                    System.Diagnostics.Trace.WriteLine("OnCaptureVideoFrameRawCallBack callback isn't alive.");
-                }
-                int nSize = width * height * 3 / 2; // YUV420 data size
-                if (nSize > 0)
-                {
-                    if (lastBufArraySize != nSize)
-                    {
-                        bufArray = new byte[nSize];
-                        lastBufArraySize = nSize;
-                    }
-
-                    Marshal.Copy(yBuffer, bufArray, 0, nSize);
-                    instance.onCaptureVideoFrameRaw(width, height, bufArray, rotation);
+                    byte[] buf = rawVideoFrameBufMgr_.GetBuf(size);
+                    Marshal.Copy(yBuffer, buf, 0, size);
+                    instance.onCaptureVideoFrameRaw(width, height, buf, rotation);
                 }
 
             }
         }
 
-        static byte[] bufArray2 = null;
-        static int lastBufArraySize2 = 0;
         private static void OnRenderVideoFrameRawCallBack(uint userId, int width, int height, IntPtr yBuffer, int rotation)
         {
             if (instance != null && instance.onRenderVideoFrameRaw != null)
             {
-                int nSize = width * height * 3 / 2; // YUV420 data size
-                if (nSize > 0)
+                int size = width * height * 3 / 2; // YUV420 data size
+                if (size > 0)
                 {
-                    if (lastBufArraySize2 != nSize)
-                    {
-                        bufArray2 = new byte[nSize];
-                        lastBufArraySize2 = nSize;
-                    }
-
-                    Marshal.Copy(yBuffer, bufArray2, 0, nSize);
-                    instance.onRenderVideoFrameRaw(userId, width, height, bufArray2, rotation);
+                    byte[] buf = rawVideoFrameBufMgr_.GetBuf(size);
+                    Marshal.Copy(yBuffer, buf, 0, size);
+                    instance.onRenderVideoFrameRaw(userId, width, height, buf, rotation);
                 }
 
             }
@@ -1409,8 +1433,6 @@ namespace agora_gaming_rtc
             if (instance == null)
             {
                 instance = new IRtcEngine(appId);
-                instanceReference = new WeakReference(instance);
-
             }
             return instance;
         }
@@ -1444,7 +1466,6 @@ namespace agora_gaming_rtc
             return instance;
         }
         private static IRtcEngine instance = null;
-        private static WeakReference instanceReference = null;
     }
 };
 

@@ -256,6 +256,9 @@ namespace WindowsFormsApp1
 
         public void OnCaptureVideoFrameRawHandlerUI()
         {
+            if (IsDisposed)
+                return;
+
             // Pick a item in list to show.
             VideoFrameRawHandlerParam sel_vfrp;
 
@@ -339,6 +342,9 @@ namespace WindowsFormsApp1
 
         public void OnRenderVideoFrameRawHandlerUI()
         {
+            if (IsDisposed)
+                return;
+
             // Pick a item in list to show.
             VideoFrameRawHandlerParam sel_vfrp;
 
@@ -478,6 +484,12 @@ namespace WindowsFormsApp1
                 re_.SetClientRole(CLIENT_ROLE.AUDIENCE);
             }
             
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            re_.StopScreenCapture();
+            re_.LeaveChannel(); int a = 0;
         }
     }
 }

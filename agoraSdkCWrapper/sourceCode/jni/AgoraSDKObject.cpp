@@ -804,6 +804,64 @@ int CAgoraSDKObject::stopScreenCaptureEx()
     return irtcEngine->stopScreenCaptureEx();
 }
 
+class  RawVideoFrameBufMgr
+{
+public:
+    class RawVideoFrameBuf {
+    public:
+        RawVideoFrameBuf()
+            : bufSize_(0)
+            , buf_(NULL) {
+
+        }
+
+        ~RawVideoFrameBuf() {
+            if (buf_)
+                delete[] buf_;
+        }
+
+        BYTE* GetBuf(int size) {
+            if (size > bufSize_) {
+                if (buf_)
+                    delete[] buf_;
+                buf_ = new BYTE[size];
+                bufSize_ = size;
+            }
+            return buf_;
+        }
+    private:
+        int bufSize_;
+        BYTE* buf_;
+    };
+public:
+    RawVideoFrameBufMgr() {
+
+     }
+    ~RawVideoFrameBufMgr() {
+
+    }
+
+    BYTE* GetBuf(int size) {
+        DWORD tid = GetCurrentThreadId();
+        std::lock_guard<std::mutex> lock(mtx_);
+        std::shared_ptr<RawVideoFrameBuf> spBuf;
+        auto it = mapThreadId2Buf_.find(tid);
+        if (it == mapThreadId2Buf_.end()) {
+            spBuf.reset(new RawVideoFrameBuf());
+            mapThreadId2Buf_[tid] = spBuf;
+        }
+        else {
+            spBuf = it->second;
+        }
+        return spBuf->GetBuf(size);
+    }
+
+private:
+    std::map<DWORD, std::shared_ptr<RawVideoFrameBuf>> mapThreadId2Buf_;
+    std::mutex mtx_;
+};
+static RawVideoFrameBufMgr rawVideoFrameBufMgr_;
+
 bool CAgoraSDKObject::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
     if (videoFrame.type != agora::media::IVideoFrameObserver::FRAME_TYPE_YUV420
@@ -816,39 +874,30 @@ bool CAgoraSDKObject::onCaptureVideoFrame(VideoFrame& videoFrame)
         return false;
     }
 
-    static BYTE* capturenYUVbuf_ = NULL;
-    static int lastCapturenSize = 0;
-    static std::mutex capturenYUVbufLock_;
-    if (1/*videoFrame.width != videoFrame.yStride*/) {
-        std::lock_guard<std::mutex> lock(capturenYUVbufLock_);
-        int size = videoFrame.width * videoFrame.height;
-        int u_size = size / 4;
-        size += size / 2;
-        if (size > lastCapturenSize) {
-            if (capturenYUVbuf_)
-                delete[] capturenYUVbuf_;
-            capturenYUVbuf_ = new BYTE[size];
-            lastCapturenSize = size;
-        }
-        BYTE* start_src = (BYTE*)videoFrame.yBuffer;
-        BYTE* start_targ = capturenYUVbuf_;
-        for (int i = 0; i < videoFrame.height; i++)
-        {
-            memcpy(start_targ, start_src, videoFrame.width);
-            start_src += videoFrame.yStride;
-            start_targ += videoFrame.width;
-        }
-        memcpy(start_targ, videoFrame.uBuffer, u_size);
-        start_targ += u_size;
-
-        memcpy(start_targ, videoFrame.vBuffer, u_size);
-        start_targ += u_size;
+    int size = videoFrame.width * videoFrame.height;
+    int u_size = size / 4;
+    size += size / 2;
+    BYTE* YUVbuf = rawVideoFrameBufMgr_.GetBuf(size);
+    if (!YUVbuf)
+        return false;
+    BYTE* start_src = (BYTE*)videoFrame.yBuffer;
+    BYTE* start_targ = YUVbuf;
+    for (int i = 0; i < videoFrame.height; i++)
+    {
+        memcpy(start_targ, start_src, videoFrame.width);
+        start_src += videoFrame.yStride;
+        start_targ += videoFrame.width;
     }
+    memcpy(start_targ, videoFrame.uBuffer, u_size);
+    start_targ += u_size;
+
+    memcpy(start_targ, videoFrame.vBuffer, u_size);
+    start_targ += u_size;
 
     if (cWrapperRtcEngineEventHandler)
         cWrapperRtcEngineEventHandler->onCaptureVideoFrameRaw(
             videoFrame.width, videoFrame.height,
-            (const unsigned char*)capturenYUVbuf_/*videoFrame.yBuffer*/, videoFrame.rotation);
+            (const unsigned char*)YUVbuf/*videoFrame.yBuffer*/, videoFrame.rotation);
     return true;
 }
 
@@ -865,44 +914,30 @@ bool CAgoraSDKObject::onRenderVideoFrame(unsigned int uid, VideoFrame& videoFram
         return false;
     }
 
-    static BYTE* capturenYUVbuf2_ = NULL;
-    static int lastCapturenSize2 = 0;
-    static std::mutex capturenYUVbufLock2_;
-    if (1/*videoFrame.width != videoFrame.yStride*/) {
-        std::lock_guard<std::mutex> lock(capturenYUVbufLock2_);
-        int size = videoFrame.width * videoFrame.height;
-        int u_size = size / 4;
-        size += size / 2;
-        /*{
-            char buf[200] = { 0 };
-            sprintf_s(buf, "onRenderVideoFrame uid:%u tid:%d size:%d\r\n", uid, GetCurrentThreadId(), size);
-            OutputDebugStringA(buf);
-        }*/
-        if (size > lastCapturenSize2) {
-            if (capturenYUVbuf2_)
-                delete[] capturenYUVbuf2_;
-            capturenYUVbuf2_ = new BYTE[size];
-            lastCapturenSize2 = size;
-        }
-        BYTE* start_src = (BYTE*)videoFrame.yBuffer;
-        BYTE* start_targ = capturenYUVbuf2_;
-        for (int i = 0; i < videoFrame.height; i++)
-        {
-            memcpy(start_targ, start_src, videoFrame.width);
-            start_src += videoFrame.yStride;
-            start_targ += videoFrame.width;
-        }
-        memcpy(start_targ, videoFrame.uBuffer, u_size);
-        start_targ += u_size;
-
-        memcpy(start_targ, videoFrame.vBuffer, u_size);
-        start_targ += u_size;
+    int size = videoFrame.width * videoFrame.height;
+    int u_size = size / 4;
+    size += size / 2;
+    BYTE* YUVbuf = rawVideoFrameBufMgr_.GetBuf(size);
+    if (!YUVbuf)
+        return false;
+    BYTE* start_src = (BYTE*)videoFrame.yBuffer;
+    BYTE* start_targ = YUVbuf;
+    for (int i = 0; i < videoFrame.height; i++)
+    {
+        memcpy(start_targ, start_src, videoFrame.width);
+        start_src += videoFrame.yStride;
+        start_targ += videoFrame.width;
     }
+    memcpy(start_targ, videoFrame.uBuffer, u_size);
+    start_targ += u_size;
+
+    memcpy(start_targ, videoFrame.vBuffer, u_size);
+    start_targ += u_size;
 
     if (cWrapperRtcEngineEventHandler)
         cWrapperRtcEngineEventHandler->onRenderVideoFrameRaw(uid,
             videoFrame.width, videoFrame.height,
-            (const unsigned char*)capturenYUVbuf2_/*videoFrame.yBuffer*/, videoFrame.rotation);
+            (const unsigned char*)YUVbuf/*videoFrame.yBuffer*/, videoFrame.rotation);
     return true;
 }
 

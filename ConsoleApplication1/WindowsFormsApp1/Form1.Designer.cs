@@ -232,9 +232,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(463, 682);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(224, 18);
+            this.label9.Size = new System.Drawing.Size(215, 18);
             this.label9.TabIndex = 11;
-            this.label9.Text = "Remotel video 1 raw data";
+            this.label9.Text = "Remote video 1 raw data";
             // 
             // pictureBox2
             // 
@@ -307,6 +307,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Agora C# Test";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
