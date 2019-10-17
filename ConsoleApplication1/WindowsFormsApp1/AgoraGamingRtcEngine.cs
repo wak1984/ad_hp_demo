@@ -117,10 +117,10 @@ namespace agora_gaming_rtc
         public OnNetworkQualityHandler OnNetworkQuality;
 
         public delegate void OnCaptureVideoFrameRawHandler(int width, int height, byte[] yBuffer, int rotation);
-        public OnCaptureVideoFrameRawHandler onCaptureVideoFrameRaw;
+        public OnCaptureVideoFrameRawHandler onCaptureVideoFrame;
 
         public delegate void OnRenderVideoFrameRawHandler(uint userId, int width, int height, byte[] yBuffer, int rotation);
-        public OnRenderVideoFrameRawHandler onRenderVideoFrameRaw;
+        public OnRenderVideoFrameRawHandler onRenderVideoFrame;
         #endregion  set callback here for user
 
         // private readonly AudioEffectManagerImpl mAudioEffectM;
@@ -457,14 +457,14 @@ namespace agora_gaming_rtc
 
         private static void OnCaptureVideoFrameRawCallBack(int width, int height, IntPtr yBuffer, int rotation)
         {
-            if (instance != null && instance.onCaptureVideoFrameRaw != null)
+            if (instance != null && instance.onCaptureVideoFrame != null)
             {
                 int size = width * height * 3 / 2; // YUV420 data size
                 if (size > 0)
                 {
                     byte[] buf = rawVideoFrameBufMgr_.GetBuf(size);
                     Marshal.Copy(yBuffer, buf, 0, size);
-                    instance.onCaptureVideoFrameRaw(width, height, buf, rotation);
+                    instance.onCaptureVideoFrame(width, height, buf, rotation);
                 }
 
             }
@@ -472,14 +472,14 @@ namespace agora_gaming_rtc
 
         private static void OnRenderVideoFrameRawCallBack(uint userId, int width, int height, IntPtr yBuffer, int rotation)
         {
-            if (instance != null && instance.onRenderVideoFrameRaw != null)
+            if (instance != null && instance.onRenderVideoFrame != null)
             {
                 int size = width * height * 3 / 2; // YUV420 data size
                 if (size > 0)
                 {
                     byte[] buf = rawVideoFrameBufMgr_.GetBuf(size);
                     Marshal.Copy(yBuffer, buf, 0, size);
-                    instance.onRenderVideoFrameRaw(userId, width, height, buf, rotation);
+                    instance.onRenderVideoFrame(userId, width, height, buf, rotation);
                 }
 
             }

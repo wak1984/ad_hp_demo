@@ -93,9 +93,9 @@ namespace WindowsFormsApp1
             if (checkBox2.Checked)
             {
                 // local video frame raw data handler, the raw data format is YUV420
-                re_.onCaptureVideoFrameRaw = OnCaptureVideoFrameRawHandler;
+                re_.onCaptureVideoFrame = OnCaptureVideoFrameRawHandler;
                 // For remote video frame raw data handler, use onRenderVideoFrameRaw.
-                re_.onRenderVideoFrameRaw = OnRenderVideoFrameRawHandler;
+                re_.onRenderVideoFrame = OnRenderVideoFrameRawHandler;
 
                 // Init video frame buffer list for thread changing.
                 mutexVideoFrameRawHandlerParam_ = new Mutex();
