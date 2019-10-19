@@ -222,7 +222,7 @@ namespace WindowsFormsApp1
             richTextBox1.Text += String.Format("MuteRemoteVideoStream return: {0}\n", ret);
 
             // Game audio capture use this api temporarily.
-            re_.StartScreenCapture(30/*fps*/, 0, 0, 0, 0, 4000, textBox2.Text);
+            re_.StartScreenCapture(30/*fps*/, 0, 0, 0, 0, 4000 * 1000, textBox2.Text);
         }
         public void UserOfflineHandlerUI(uint uid)
         {
@@ -490,6 +490,17 @@ namespace WindowsFormsApp1
         {
             re_.StopScreenCapture();
             re_.LeaveChannel(); int a = 0;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form2 f = new Form2();
+            f.Closed += (o, args) =>
+            {
+                this.textBox2.Text = f.selProcessPath;
+            };
+            f.ShowDialog();
+            f.Dispose();
         }
     }
 }
