@@ -123,7 +123,7 @@ AGORA_API int setExternalAudioSource(bool enabled, int sampleRate, int channels)
 AGORA_API int setExternalAudioSink(bool enabled, int sampleRate, int channels);
 AGORA_API int pushExternalAudioFrame(int type, int samples, int bytesPerSample, int channels, int samplesPerSec, void* buffer, int64_t renderTimeMs, int avsync_type);
 
-AGORA_API int startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName);
+AGORA_API int startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, DWORD processID);
 AGORA_API int stopScreenCapture();
 
 AGORA_API int startScreenCaptureEx(HWND windowId, int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate);

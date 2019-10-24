@@ -3005,7 +3005,7 @@ public:
    - 0: Success.
    - < 0: Failure.
    */
-  virtual int startScreenCapture(int captureFreq, const Rect *rect, int bitrate,const char* GameName) = 0;
+  virtual int startScreenCapture(int captureFreq, const Rect *rect, int bitrate, DWORD processID) = 0;
 
 
   virtual int startScreenCaptureEx(WindowIDType windowId, int captureFreq, const Rect *rect, int bitrate = 0) = 0;

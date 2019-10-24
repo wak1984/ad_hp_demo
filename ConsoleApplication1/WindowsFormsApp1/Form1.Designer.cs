@@ -187,15 +187,15 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(395, 45);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(98, 18);
+            this.label7.Size = new System.Drawing.Size(152, 18);
             this.label7.TabIndex = 14;
-            this.label7.Text = "Game Path:";
+            this.label7.Text = "Game Process ID:";
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(500, 41);
+            this.textBox2.Location = new System.Drawing.Point(570, 41);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(887, 28);
+            this.textBox2.Size = new System.Drawing.Size(817, 28);
             this.textBox2.TabIndex = 15;
             // 
             // pictureBox1

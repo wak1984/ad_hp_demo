@@ -780,10 +780,10 @@ int CAgoraSDKObject::setExternalVideoSource(bool enable, bool useTexture)
 }
 
 
-int CAgoraSDKObject::startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const char* GameName)
+int CAgoraSDKObject::startScreenCapture(int captureFreq, int rc_left, int rc_top, int rc_width, int rc_height, int bitrate, const DWORD processID)
 {
     Rect rc(rc_left, rc_top, rc_width, rc_height);
-    return irtcEngine->startScreenCapture(captureFreq, &rc, bitrate, GameName);
+    return irtcEngine->startScreenCapture(captureFreq, &rc, bitrate, processID);
 }
 
 

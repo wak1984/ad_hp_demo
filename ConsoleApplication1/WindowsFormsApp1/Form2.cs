@@ -98,7 +98,7 @@ namespace WindowsFormsApp1
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                label2.Text = listView1.SelectedItems[0].SubItems[4].Text;
+                label2.Text = listView1.SelectedItems[0].Text;
             } else
             {
                 label2.Text = "";
@@ -115,7 +115,7 @@ namespace WindowsFormsApp1
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                label2.Text = listView1.SelectedItems[0].SubItems[4].Text;
+                label2.Text = listView1.SelectedItems[0].Text;
                 selProcessPath = label2.Text;
                 Close();
             }
