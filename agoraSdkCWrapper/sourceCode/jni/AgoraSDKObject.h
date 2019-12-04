@@ -59,6 +59,7 @@ public:
   virtual int startEchoTest();
   virtual int stopEchoTest();
   virtual int muteLocalAudioStream(bool muted);
+  virtual int muteGameAudioStream(bool muted);
   virtual int muteAllRemoteAudioStreams(bool muted);
   virtual int muteRemoteAudioStream(uid_t uid, bool muted);
   virtual int switchCamera();

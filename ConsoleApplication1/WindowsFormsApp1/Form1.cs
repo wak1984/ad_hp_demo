@@ -42,6 +42,7 @@ namespace WindowsFormsApp1
         static Form1 the_form;
         private Dictionary<uint, IntPtr> remote_video_map_;
         private bool channel_join_success_;
+        private bool is_client_broadcaster_ = false;
 
         public static VideoFrameRawHandlerParam curUIUsingVideoFrameRawHandlerParam_;
         public static List<VideoFrameRawHandlerParam> usingVideoFrameRawHandlerParam_;
@@ -103,6 +104,7 @@ namespace WindowsFormsApp1
                 unUseVideoFrameRawHandlerParam_ = new List<VideoFrameRawHandlerParam>();
             }
 
+            is_client_broadcaster_ = checkBox1.Checked;
             re_.JoinChannel(channel_name, "", 0);
         }
 
@@ -231,6 +233,11 @@ namespace WindowsFormsApp1
             {
                 remote_video_map_.Remove(uid);
             }
+            if (is_client_broadcaster_ && uid != 10000)
+            {
+                re_.MuteGameAudioStream(false);
+                richTextBox1.Text += String.Format("call MuteGameAudioStream: false\n", uid);
+            }
         }
         public static void UserOfflineHandler(uint uid, USER_OFFLINE_REASON reason)
         {
@@ -243,6 +250,12 @@ namespace WindowsFormsApp1
         public void UserJoinedHandlerUI(uint uid)
         {
             richTextBox1.Text += String.Format("UserJoinedHandlerUI: {0}\n", uid);
+            if (is_client_broadcaster_ && uid != 10000)
+            {
+                re_.MuteGameAudioStream(true);
+                richTextBox1.Text += String.Format("call MuteGameAudioStream: true\n", uid);
+            }
+            
         }
 
         public void UserJoinedHandler(uint uid, int elapsed) {

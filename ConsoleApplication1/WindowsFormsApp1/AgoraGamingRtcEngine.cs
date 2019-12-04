@@ -814,6 +814,11 @@ namespace agora_gaming_rtc
             return muteLocalAudioStream(mute);
         }
 
+        public int MuteGameAudioStream(bool mute)
+        {
+            return muteGameAudioStream(mute);
+        }
+
         /**
 		 * mute/unmute all the remote audio stream receiving
 		 *

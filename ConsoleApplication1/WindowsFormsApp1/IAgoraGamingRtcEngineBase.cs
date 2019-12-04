@@ -619,6 +619,9 @@ namespace agora_gaming_rtc
         protected static extern int muteLocalAudioStream(bool mute);
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]
+        protected static extern int muteGameAudioStream(bool mute);
+
+        [DllImport(MyLibName, CharSet = CharSet.Ansi)]
         protected static extern int muteAllRemoteAudioStreams(bool mute);
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]

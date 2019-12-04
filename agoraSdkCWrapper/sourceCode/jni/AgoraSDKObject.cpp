@@ -296,6 +296,12 @@ int CAgoraSDKObject::muteLocalAudioStream(bool muted)
     return param.muteLocalAudioStream(muted);
 }
 
+int CAgoraSDKObject::muteGameAudioStream(bool muted)
+{
+    RtcEngineParameters param(*irtcEngine);
+    return param.muteGameAudioStream(muted);
+}
+
 int CAgoraSDKObject::muteAllRemoteAudioStreams(bool muted)
 {
     RtcEngineParameters param(*irtcEngine);

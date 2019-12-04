@@ -471,6 +471,12 @@ extern "C"
         return cAgoraSDKObject->getCAgoraSDKInstance()->muteLocalAudioStream(muted);
     }
 
+    int muteGameAudioStream(bool muted)
+    {
+        CHECKWHEATHERINITAGORASDKOBJECTINT();
+        return cAgoraSDKObject->getCAgoraSDKInstance()->muteGameAudioStream(muted);
+    }
+
     int muteAllRemoteAudioStreams(bool muted)
     {
         CHECKWHEATHERINITAGORASDKOBJECTINT();

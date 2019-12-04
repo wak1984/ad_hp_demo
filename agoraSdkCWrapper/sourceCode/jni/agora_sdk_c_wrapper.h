@@ -49,6 +49,7 @@ AGORA_API int setAudioMixingPosition(int pos);
 AGORA_API int startEchoTest();
 AGORA_API int stopEchoTest();
 AGORA_API int muteLocalAudioStream(bool muted);
+AGORA_API int muteGameAudioStream(bool muted);
 AGORA_API int muteAllRemoteAudioStreams(bool muted);
 AGORA_API int muteRemoteAudioStream(unsigned int uid, bool muted);
 AGORA_API int switchCamera();

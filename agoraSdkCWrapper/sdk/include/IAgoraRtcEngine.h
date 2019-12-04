@@ -4239,7 +4239,10 @@ public:
      */
     int muteLocalAudioStream(bool mute) {
         return setParameters("{\"rtc.audio.mute_me\":%s,\"che.audio.mute_me\":%s}", mute ? "true" : "false", mute ? "true" : "false");
-    }
+    } 
+	int muteGameAudioStream(bool mute) {
+		return setParameters("{\"rtc.mute.game.audio\":%s}", mute ? "true" : "false");
+	}
     // mute/unmute all peers. unmute will clear all muted peers specified mutePeer() interface
 
     /** Stops receiving a specified remote user’s audio stream.
