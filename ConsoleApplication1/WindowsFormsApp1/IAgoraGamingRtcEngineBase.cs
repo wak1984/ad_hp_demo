@@ -925,6 +925,8 @@ namespace agora_gaming_rtc
 
         protected delegate void EngineEventOnRenderVideoFrameRawHandler(uint userId, int width, int height, IntPtr yBuffer, int rotation);
 
+        protected delegate void EngineEventOnRemoteVideoStatsHandler(uint uid, int delay, int width, int height, int receivedBitrate, int receivedFrameRate, int rxStreamType);
+
         protected delegate void OnEngineEventHandler(int methodNumber, string data);
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]
@@ -1031,6 +1033,9 @@ namespace agora_gaming_rtc
 
         [DllImport(MyLibName, CharSet = CharSet.Ansi)]
         protected static extern void initEventOnRenderVideoFrameRaw(EngineEventOnRenderVideoFrameRawHandler onRenderVideoFrameRaw);
+
+        [DllImport(MyLibName, CharSet = CharSet.Ansi)]
+        protected static extern void initEventOnRemoteVideoStats(EngineEventOnRemoteVideoStatsHandler onRenderVideoFrameRaw);
         #endregion engine callbacks   
     }
 }

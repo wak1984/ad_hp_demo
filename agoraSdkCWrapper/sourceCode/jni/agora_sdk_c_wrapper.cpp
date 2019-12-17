@@ -941,14 +941,21 @@ extern "C"
 #endif
 }
 
-AGORA_API void initEventOnCaptureVideoFrameRaw(FUNC_onCaptureVideoFrameRaw onCaptureVideoFrameRaw)
+AGORA_API void initEventOnCaptureVideoFrameRaw(FUNC_OnCaptureVideoFrameRaw onCaptureVideoFrameRaw)
 {
     CHECKWHEATHERINITAGORASDKOBJECTVOID();
     cAgoraSDKObject->getCWrapperRtcEngineEventHandler()->initEventOnCaptureVideoFrameRaw(onCaptureVideoFrameRaw);
 }
 
-AGORA_API void initEventOnRenderVideoFrameRaw(FUNC_onRenderVideoFrameRaw onRenderVideoFrameRaw)
+AGORA_API void initEventOnRenderVideoFrameRaw(FUNC_OnRenderVideoFrameRaw onRenderVideoFrameRaw)
 {
     CHECKWHEATHERINITAGORASDKOBJECTVOID();
     cAgoraSDKObject->getCWrapperRtcEngineEventHandler()->initEventOnRenderVideoFrameRaw(onRenderVideoFrameRaw);
 }
+
+AGORA_API void initEventOnRemoteVideoStats(FUNC_OnRemoteVideoStats onRemoteVideoStats)
+{
+    CHECKWHEATHERINITAGORASDKOBJECTVOID();
+    cAgoraSDKObject->getCWrapperRtcEngineEventHandler()->initEventOnRemoteVideoStats(onRemoteVideoStats);
+}
+

@@ -43,8 +43,9 @@ public:
   FUNC_OnStreamMessage onStreamMessage = NULL;
   FUNC_OnConnectionBanned onConnectionBanned = NULL;
   FUNC_OnNetworkQuality onNetworkQuality = NULL;
-  FUNC_onCaptureVideoFrameRaw onCaptureVideoFrameRaw = NULL;
-  FUNC_onRenderVideoFrameRaw onRenderVideoFrameRaw = NULL;
+  FUNC_OnCaptureVideoFrameRaw onCaptureVideoFrameRaw = NULL;
+  FUNC_OnRenderVideoFrameRaw onRenderVideoFrameRaw = NULL;
+  FUNC_OnRemoteVideoStats onRemoteVideoStats = NULL;
 };
 
 class CWrapperRtcEngineEventHandler : public IRtcEngineEventHandler
@@ -121,9 +122,11 @@ public:
 
   void initEventOnNetworkQuality(FUNC_OnNetworkQuality onNetworkQuality);
 
-  void initEventOnCaptureVideoFrameRaw(FUNC_onCaptureVideoFrameRaw onCaptureVideoFrameRaw);
+  void initEventOnCaptureVideoFrameRaw(FUNC_OnCaptureVideoFrameRaw onCaptureVideoFrameRaw);
 
-  void initEventOnRenderVideoFrameRaw(FUNC_onRenderVideoFrameRaw onRenderVideoFrameRaw);
+  void initEventOnRenderVideoFrameRaw(FUNC_OnRenderVideoFrameRaw onRenderVideoFrameRaw);
+
+  void initEventOnRemoteVideoStats(FUNC_OnRemoteVideoStats onRemoteVideoStats);
 
   void onJoinChannelSuccess(const char *channel, uid_t userId, int elapsed);
 
@@ -214,6 +217,8 @@ public:
   void onCaptureVideoFrameRaw(int width, int height, const unsigned char* yBuffer, int rotation);
 
   void onRenderVideoFrameRaw(uid_t userId, int width, int height, const unsigned char* yBuffer, int rotation);
+
+  void onRemoteVideoStats(const RemoteVideoStats& stats);
 };
 
 #endif

@@ -65,6 +65,7 @@ namespace WindowsFormsApp1
             re_.OnFirstRemoteVideoDecoded = OnFirstRemoteVideoDecodedHandlerThread;
             re_.OnUserOffline = UserOfflineHandler;
             re_.OnUserJoined = UserJoinedHandler;
+            re_.onRemoteVideoStats = OnRemoteVideoStatsHandler;
         }
 
         ~Form1()
@@ -104,6 +105,11 @@ namespace WindowsFormsApp1
             }
 
             re_.JoinChannel(channel_name, "", 0);
+        }
+
+        public void OnRemoteVideoStatsHandler(uint uid, int delay, int width, int height, int receivedBitrate, int receivedFrameRate, int rxStreamType)
+        {
+            label3.Text = String.Format("receivedFrameRate: {0}\n", receivedFrameRate);
         }
 
         public void OnFirstRemoteVideoDecodedHandler(uint uid, int width, int height, int elapsed)

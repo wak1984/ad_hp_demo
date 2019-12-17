@@ -157,8 +157,9 @@ typedef void(__stdcall *FUNC_OnStreamPublished)(const char *url, int error);
 typedef void(__stdcall *FUNC_OnStreamMessageError)(uid_t userId, int streamId, int code, int missed, int cached);
 typedef void(__stdcall *FUNC_OnStreamMessage)(uid_t userId, int streamId, const char *data, size_t length);
 typedef void(__stdcall *FUNC_OnConnectionBanned)();
-typedef void(__stdcall* FUNC_onCaptureVideoFrameRaw)(int width, int height, const unsigned char* yBuffer, int rotation);
-typedef void(__stdcall* FUNC_onRenderVideoFrameRaw)(uid_t userId, int width, int height, const unsigned char* yBuffer, int rotation);
+typedef void(__stdcall* FUNC_OnCaptureVideoFrameRaw)(int width, int height, const unsigned char* yBuffer, int rotation);
+typedef void(__stdcall* FUNC_OnRenderVideoFrameRaw)(uid_t userId, int width, int height, const unsigned char* yBuffer, int rotation);
+typedef void(__stdcall* FUNC_OnRemoteVideoStats)(uid_t uid, int delay, int width, int height, int receivedBitrate, int receivedFrameRate, int rxStreamType);
 #else
 
 typedef void (*FUNC)(int, const char *);

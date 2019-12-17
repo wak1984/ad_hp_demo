@@ -180,15 +180,20 @@ void CWrapperRtcEngineEventHandler::initEventOnNetworkQuality(FUNC_OnNetworkQual
 }
 
 
-void CWrapperRtcEngineEventHandler::initEventOnCaptureVideoFrameRaw(FUNC_onCaptureVideoFrameRaw onCaptureVideoFrameRaw)
+void CWrapperRtcEngineEventHandler::initEventOnCaptureVideoFrameRaw(FUNC_OnCaptureVideoFrameRaw onCaptureVideoFrameRaw)
 {
     CWrapperRtcEngineEventHandler::engineEvent->onCaptureVideoFrameRaw = onCaptureVideoFrameRaw;
 }
 
 
-void CWrapperRtcEngineEventHandler::initEventOnRenderVideoFrameRaw(FUNC_onRenderVideoFrameRaw onRenderVideoFrameRaw)
+void CWrapperRtcEngineEventHandler::initEventOnRenderVideoFrameRaw(FUNC_OnRenderVideoFrameRaw onRenderVideoFrameRaw)
 {
     CWrapperRtcEngineEventHandler::engineEvent->onRenderVideoFrameRaw = onRenderVideoFrameRaw;
+}
+
+void CWrapperRtcEngineEventHandler::initEventOnRemoteVideoStats(FUNC_OnRemoteVideoStats onRemoteVideoStats)
+{
+    CWrapperRtcEngineEventHandler::engineEvent->onRemoteVideoStats = onRemoteVideoStats;
 }
 
 void CWrapperRtcEngineEventHandler::onJoinChannelSuccess(const char *channel, uid_t userId, int elapsed)
@@ -366,6 +371,14 @@ void CWrapperRtcEngineEventHandler::onRenderVideoFrameRaw(uid_t userId, int widt
         return;
 
     CWrapperRtcEngineEventHandler::engineEvent->onRenderVideoFrameRaw(userId, width, height, yBuffer, rotation);
+}
+
+void CWrapperRtcEngineEventHandler::onRemoteVideoStats(const RemoteVideoStats& stats)
+{
+    if (CWrapperRtcEngineEventHandler::engineEvent->onRemoteVideoStats == NULL)
+        return;
+
+    CWrapperRtcEngineEventHandler::engineEvent->onRemoteVideoStats(stats.uid, stats.delay, stats.width, stats.height, stats.receivedBitrate, stats.receivedFrameRate, stats.rxStreamType);
 }
 
 //

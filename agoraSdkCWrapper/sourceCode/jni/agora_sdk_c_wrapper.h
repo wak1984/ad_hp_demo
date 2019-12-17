@@ -164,8 +164,9 @@ AGORA_API void initEventOnStreamMessageError(FUNC_OnStreamMessageError onStreamM
 AGORA_API void initEventOnStreamMessage(FUNC_OnStreamMessage onStreamMessage);
 AGORA_API void initEventOnConnectionBanned(FUNC_OnConnectionBanned onConnectionBanned);
 AGORA_API void initEventOnNetworkQuality(FUNC_OnNetworkQuality onNetworkQuality);
-AGORA_API void initEventOnCaptureVideoFrameRaw(FUNC_onCaptureVideoFrameRaw onCaptureVideoFrameRaw);
-AGORA_API void initEventOnRenderVideoFrameRaw(FUNC_onRenderVideoFrameRaw onRenderVideoFrameRaw);
+AGORA_API void initEventOnCaptureVideoFrameRaw(FUNC_OnCaptureVideoFrameRaw onCaptureVideoFrameRaw);
+AGORA_API void initEventOnRenderVideoFrameRaw(FUNC_OnRenderVideoFrameRaw onRenderVideoFrameRaw);
+AGORA_API void initEventOnRemoteVideoStats(FUNC_OnRemoteVideoStats onRemoteVideoStats);
 //--------------Callback end------------------
 
 //---------jni onload---------

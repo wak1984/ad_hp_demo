@@ -121,6 +121,9 @@ namespace agora_gaming_rtc
 
         public delegate void OnRenderVideoFrameRawHandler(uint userId, int width, int height, byte[] yBuffer, int rotation);
         public OnRenderVideoFrameRawHandler onRenderVideoFrame;
+
+        public delegate void OnRemoteVideoStatsHandler(uint uid, int delay, int width, int height, int receivedBitrate, int receivedFrameRate, int rxStreamType);
+        public OnRemoteVideoStatsHandler onRemoteVideoStats;
         #endregion  set callback here for user
 
         // private readonly AudioEffectManagerImpl mAudioEffectM;
@@ -485,6 +488,14 @@ namespace agora_gaming_rtc
             }
         }
 
+        private static void OnRemoteVideoStatsCallBack(uint uid, int delay, int width, int height, int receivedBitrate, int receivedFrameRate, int rxStreamType)
+        {
+            if (instance != null && instance.onRemoteVideoStats != null)
+            {
+                instance.onRemoteVideoStats(uid, delay, width, height, receivedBitrate, receivedFrameRate, rxStreamType);
+            }
+        }
+
 
         private IRtcEngine(string appId)
         {
@@ -555,6 +566,7 @@ namespace agora_gaming_rtc
         private static EngineEventOnNetworkQualityHandler OnNetworkQualityHandler_ = OnNetworkQualityCallBack;
         private static EngineEventOnCaptureVideoFrameRawHandler OnCaptureVideoFrameRawHandler_ = OnCaptureVideoFrameRawCallBack;
         private static EngineEventOnRenderVideoFrameRawHandler OnRenderVideoFrameRawHandler_ = OnRenderVideoFrameRawCallBack;
+        private static EngineEventOnRemoteVideoStatsHandler OnRemoteVideoStatsHandler_ = OnRemoteVideoStatsCallBack;
 
         /**
 		 */
@@ -594,6 +606,7 @@ namespace agora_gaming_rtc
             initEventOnNetworkQuality(OnNetworkQualityHandler_);
             initEventOnCaptureVideoFrameRaw(OnCaptureVideoFrameRawHandler_);
             initEventOnRenderVideoFrameRaw(OnRenderVideoFrameRawHandler_);
+            initEventOnRemoteVideoStats(OnRemoteVideoStatsHandler_);
         }
 
         public string doFormat(string format, params object[] args)
