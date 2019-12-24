@@ -56,7 +56,7 @@ namespace WindowsFormsApp1
             the_form = this;
             main_thread_sync_context_ = new WindowsFormsSynchronizationContext();
 
-            re_ = IRtcEngine.GetEngine("8a6e72d420d24f56afbe9b404dbdc732");
+            re_ = IRtcEngine.GetEngine("aab8b8f5a8cd4469a63042fcfafe7063");
             re_.SetChannelProfile(CHANNEL_PROFILE.GAME_COMMAND_MODE);
             re_.SetClientRole(CLIENT_ROLE.AUDIENCE);
             re_.OnJoinChannelSuccess = JoinChannelSuccessHandler;
